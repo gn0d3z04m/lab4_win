@@ -1,0 +1,28 @@
+name: GitHub Actions Windows
+run-name: ${{ github.actor }} Windows test
+on: [push]
+jobs:
+  Test:
+    runs-on: windows-latest
+    steps:
+    - name: Check out repository code
+      uses: actions/checkout@v4
+    
+    - name: List files in the repository
+      run: dir ${{ github.workspace }}
+    
+    - name: Setup CMake
+      uses: threeal/cmake-action@v2.1.0
+    
+    - name: Configure with CMake
+      run: cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+    
+    - name: Build project
+      run: cmake --build build --config Release
+    
+    - name: List build artifacts
+      run: dir ${{ github.workspace }}\build
+    
+    - name: Run application
+      working-directory: ./build/hello_world_application/Release
+      run: .\hello.exe
